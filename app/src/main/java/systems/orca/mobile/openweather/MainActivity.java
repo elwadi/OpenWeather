@@ -169,11 +169,17 @@
 
 package systems.orca.mobile.openweather;
 
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
+
+import systems.orca.mobile.openweather.Noti.OpenWeatherNotification;
+import systems.orca.mobile.openweather.api.OpenWeatherGeo;
 
 
 public class MainActivity extends FragmentActivity {
@@ -228,6 +234,23 @@ public class MainActivity extends FragmentActivity {
 			actionBar.addTab(actionBar.newTab().setText("iOS").setTabListener(tabListener));
 			actionBar.addTab(actionBar.newTab().setText("Windows").setTabListener(tabListener));
 			actionBar.addTab(actionBar.newTab().setText("Position").setTabListener(tabListener));
+            //test GEO
+            OpenWeatherGeo gps = new OpenWeatherGeo(this);
+            if(gps.canGetLocation()){
+
+                double latitude = gps.getLatitude();
+                double longitude = gps.getLongitude();
+
+                // \n is for new line
+                Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+            }else{
+                // can't get location
+                // GPS or Network is not enabled
+                // Ask user to enable GPS/network in settings
+                gps.showSettingsAlert();
+            }
+        (new OpenWeatherNotification(001,"Open Weather Notification","Hello World",R.drawable.ic_launcher,this)).start();
+
 
     }
 
